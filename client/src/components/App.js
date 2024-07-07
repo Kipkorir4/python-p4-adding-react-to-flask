@@ -7,14 +7,19 @@ import NewMessage from "./NewMessage";
 const testUser = { username: "Duane" };
 
 function App() {
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [messages, setMessages] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetch("http://127.0.0.1:5555/messages")
-      .then((r) => r.json())
-      .then((messages) => setMessages(messages));
+      .then(r => {
+        if (r.ok) {
+          return r.json()
+        }
+        throw r;
+      })
+      .then((messages) => setMessages(messages))
   }, []);
 
   function handleAddMessage(newMessage) {
